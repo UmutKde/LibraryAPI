@@ -8,7 +8,7 @@ public class Services
     {
         int userbooks = loans.Count(l => l.UserId == UserId);
 
-        List<int> copyOfBooks = bookCopies.Where(bc => bc.BookId == bookId).Select(bc => bc.BookCopyId).ToList();
+        List<int> copyOfBooks = bookCopies.Where(bc => bc.BookId == bookId).Select(bc => bc.Id).ToList();
 
         List<int> borrowedBooks = loans.Where(l => l.BookId == bookId).Select(l => l.BookCopyId).ToList();
 
