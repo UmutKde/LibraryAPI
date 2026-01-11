@@ -1,9 +1,10 @@
+using LibrarySystem.Infrastructure;
 using LibrarySystem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
-// Veritabanı
-builder.Services.AddDbContext<LibraryDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Extensions DI
+builder.Services.AddInfrastructureService(builder.Configuration);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -21,6 +22,22 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        // Infrastructure katmanındaki context'i çağırıyoruz
+        var context = services.GetRequiredService<LibraryDbContext>();
+        
+        // Yazdığımız tohumlama metodunu çalıştırıyoruz
+        await LibraryDbContextSeed.SeedAsync(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Veritabanı seed edilirken bir hata oluştu.");
+    }
+}
 
 app.Run();
