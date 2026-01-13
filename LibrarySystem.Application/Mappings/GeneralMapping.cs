@@ -1,0 +1,25 @@
+using AutoMapper;
+using LibrarySystem.Application.Dtos.BookDto;
+using LibrarySystem.Domain.Entities;
+
+namespace LibrarySystem.Application.Mappings;
+
+public class GeneralMapping : Profile    
+{
+    public GeneralMapping()
+    {
+        CreateMap<Book,BookDto>()
+            .ForMember(dest => dest.PublisherName , opt => opt.MapFrom(src => src.Publisher.PublisherName))
+            .ForMember(dest => dest.Authors , opt => opt.MapFrom(src => src.Authors.Select(a => $"{a.Name} {a.Surname}").ToList()))
+            .ForMember(dest => dest.Categories , opt => opt.MapFrom(src => src.Categories.Select(a => a.CategoryName).ToList()));
+
+        CreateMap<BookDtoForInsertion, Book>()
+            .ForMember(dest => dest.Authors, opt => opt.Ignore())    
+            .ForMember(dest => dest.Categories, opt => opt.Ignore())
+            .ForMember(dest => dest.Publisher, opt => opt.Ignore());
+
+        CreateMap<BookDtoForUpdate, Book>()
+             .ForMember(dest => dest.Authors, opt => opt.Ignore())
+             .ForMember(dest => dest.Categories, opt => opt.Ignore());
+    }
+}
