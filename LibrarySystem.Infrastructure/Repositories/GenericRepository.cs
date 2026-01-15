@@ -7,13 +7,13 @@ namespace LibrarySystem.Infrastructure.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    private readonly LibraryDbContext _context;
-    private readonly DbSet<T> _dbSet;
+    protected readonly LibraryDbContext _context;
+    protected readonly DbSet<T> _dbSet;
 
-    public GenericRepository(LibraryDbContext context, DbSet<T> dbSet)
+    public GenericRepository(LibraryDbContext context)
     {
         _context = context;
-        _dbSet = dbSet;
+        _dbSet = _context.Set<T>();
     }
 
     public async Task AddAsync(T entity)
@@ -25,8 +25,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public async Task DeleteAsync(int id)
     {
         var entity = await _dbSet.FindAsync(id);
-        if(entity != null)
-        {            
+        if (entity != null)
+        {
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
         }

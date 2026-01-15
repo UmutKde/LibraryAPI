@@ -7,7 +7,7 @@ public class BookDtoForInsertion
     public string? ImageUrl { get; set; }
     public int PageCount { get; set; }
 
-    public int PublisherId { get; set; }
+    public int? PublisherId { get; set; }
     public List<int> AuthorIds { get; set; }
     public List<int> CategoryIds { get; set; }
 }
