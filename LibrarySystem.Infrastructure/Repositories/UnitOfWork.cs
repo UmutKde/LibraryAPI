@@ -17,6 +17,7 @@ public class UnitOfWork : IUnitOfWork
 
     public UnitOfWork(LibraryDbContext context)
     {
+        _context = context;
         Books = new BookRepository(_context);
         Authors = new GenericRepository<Author>(_context);
         Publishers = new GenericRepository<Publisher>(_context);

@@ -17,5 +17,8 @@ public static class ServiceRegistration
 
         // Generic Repository Kaydı
         services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
+
+        // Unit Of Work Kaydı
+        services.AddScoped<IUnitOfWork,UnitOfWork>();
     }
 }

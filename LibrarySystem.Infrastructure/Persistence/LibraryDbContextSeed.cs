@@ -7,6 +7,7 @@ public static class LibraryDbContextSeed
 {
     public static async Task SeedAsync(LibraryDbContext context)
     {
+        System.Console.WriteLine("Seed Data verisi var");
         try 
         {
             await context.Database.MigrateAsync();

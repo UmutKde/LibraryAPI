@@ -1,15 +1,20 @@
+using LibrarySystem.Application.Extensions;
 using LibrarySystem.Infrastructure;
 using LibrarySystem.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Extensions DI
 builder.Services.AddInfrastructureService(builder.Configuration);
+// App Extension DI
+builder.Services.AddApplicationService();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Controller Kullanmak için
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -20,7 +25,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthorization();
+
 app.UseHttpsRedirection();
+
+app.MapControllers(); 
 
 using (var scope = app.Services.CreateScope())
 {

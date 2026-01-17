@@ -1,0 +1,18 @@
+using System.Reflection;
+using LibrarySystem.Application.Interfaces;
+using LibrarySystem.Application.Services;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace LibrarySystem.Application.Extensions;
+
+public static class ServiceExtensions
+{
+    public static void AddApplicationService(this IServiceCollection services)
+    {
+        // AutoMapper Kaydı
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+        // Service Kaydı
+        services.AddScoped<IBookService,BookService>();
+    }
+}

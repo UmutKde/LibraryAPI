@@ -17,4 +17,11 @@ public class Book
     public Publisher Publisher { get; set; }
     public BookSummary Summary { get; set; }
 
+    public Book()
+    {
+        Authors = new List<Author>();
+        Categories = new List<Category>();
+        BookCopies = new List<BookCopy>();
+    }
+
 }

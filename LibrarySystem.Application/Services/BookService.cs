@@ -53,6 +53,7 @@ public class BookService : IBookService
 
     public async Task DeleteBookAsync(int id)
     {
+        Console.WriteLine($" >>> GELEN ID: {id} <<<");
         var book = await _unitOfWork.Books.GetByIdAsync(id);
         if(book == null)
             throw new Exception("Silinecek kitap bulunamadı.");
