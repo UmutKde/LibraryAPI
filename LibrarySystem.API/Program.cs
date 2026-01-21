@@ -1,3 +1,4 @@
+using LibrarySystem.API.Extensions;
 using LibrarySystem.Application.Extensions;
 using LibrarySystem.Infrastructure;
 using LibrarySystem.Infrastructure.Persistence;
@@ -24,7 +25,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 
 app.UseHttpsRedirection();

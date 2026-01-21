@@ -25,15 +25,8 @@ public class BookController : ControllerBase
     [HttpGet("{id:int}", Name = "GetBookById")]
     public async Task<IActionResult> GetBookById([FromRoute] int id)
     {
-        try
-        {
             var book = await _service.GetBookByIdAsync(id);
             return Ok(book);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
     }
 
     [HttpPost]
@@ -52,28 +45,15 @@ public class BookController : ControllerBase
         if (!ModelState.IsValid)
             return UnprocessableEntity(ModelState);
 
-        try
-        {
             await _service.UpdateBookAsync(bookDto);
             return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
+
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBook([FromRoute] int id)
     {
-        try
-        {
             await _service.DeleteBookAsync(id);
             return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
     }
 }
