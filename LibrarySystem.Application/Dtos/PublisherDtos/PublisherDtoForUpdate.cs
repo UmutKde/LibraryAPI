@@ -1,6 +1,6 @@
-namespace LibrarySystem.Domain.Entities;
+namespace LibrarySystem.Application.Dtos;
 
-public class Publisher
+public class PublisherDtoForUpdate
 {
     public int Id { get; set; }
     public string? PublisherName { get; set; }
@@ -11,7 +11,4 @@ public class Publisher
     public string? ContactPerson { get; set; }
     public string? City { get; set; }
     public string? Country { get; set; }
-
-    // Relation Table
-    public ICollection<Book> Books { get; set; }
 }

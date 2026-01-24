@@ -1,6 +1,6 @@
-namespace LibrarySystem.Domain.Entities;
+namespace LibrarySystem.Application.Dtos.BookDtos;
 
-public class Author
+public class AuthorDto
 {
     public int Id { get; set; }
     public string? Name { get; set; }
@@ -12,6 +12,4 @@ public class Author
     public string? Country { get; set; }
     public string? WebSiteUrl { get; set; }
 
-    // Relation Tables
-    public ICollection<Book> Books { get; set; }
 }

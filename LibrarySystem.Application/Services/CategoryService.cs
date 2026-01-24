@@ -44,7 +44,7 @@ public class CategoryService : ICategoryService
 
     public async Task<CategoryDto> GetOneCategoryAsync(int id)
     {
-        var category = await _unitOfWork.Categories.GetOneByConditionAsync(b => b.Id == id,true);
+        var category = await _unitOfWork.Categories.GetOneByConditionAsync(b => b.Id == id,false);
         if(category is null)
             throw new CategoryNotFoundException(id);
         return _mapper.Map<CategoryDto>(category);

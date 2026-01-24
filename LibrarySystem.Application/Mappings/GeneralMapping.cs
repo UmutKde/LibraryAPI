@@ -1,4 +1,5 @@
 using AutoMapper;
+using LibrarySystem.Application.Dtos;
 using LibrarySystem.Application.Dtos.BookDtos;
 using LibrarySystem.Application.Dtos.CategoryDtos;
 using LibrarySystem.Domain.Entities;
@@ -27,5 +28,12 @@ public class GeneralMapping : Profile
         CreateMap<CategoryDtoForInsertion,Category>();
         CreateMap<CategoryDtoForUpdate,Category>();
 
+        CreateMap<Author,AuthorDto>();
+        CreateMap<AuthorDtoForInsertion,Author>();
+        CreateMap<AuthorDtoForUpdate,Author>();
+
+        CreateMap<Publisher,PublisherDto>();
+        CreateMap<PublisherDtoForInsertion,Publisher>();
+        CreateMap<PublisherDtoForUpdate,Publisher>();
     }
 }
