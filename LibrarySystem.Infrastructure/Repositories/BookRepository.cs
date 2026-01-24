@@ -11,21 +11,26 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
     {
     }
 
-    public async Task<IEnumerable<Book>> GetAllBooksWithDetailsAsync()
+    public async Task<IEnumerable<Book>> GetAllBooksWithDetailsAsync(bool trackChanges)
     {
-        return await _context.Books
+        var query = _context.Books
             .Include(b => b.Publisher)
             .Include(b => b.Authors)
-            .Include(b => b.Categories)
-            .ToListAsync();
+            .Include(b => b.Categories);
+        return trackChanges
+        ? await query.ToListAsync()
+        : await query.AsNoTracking().ToListAsync();
     }
 
-    public async Task<Book> GetOneBookWithDetailsAsync(int id)
+    public async Task<Book> GetOneBookWithDetailsAsync(int id,bool trackChanges)
     {
-        return await _context.Books
+        var query = _context.Books
             .Include(b => b.Publisher)
             .Include(b => b.Authors)
             .Include(b => b.Categories)
-            .FirstOrDefaultAsync(b => b.Id == id);
+            .Where(b => b.Id == id);
+        return trackChanges
+        ? await query.SingleOrDefaultAsync()
+        : await query.AsNoTracking().SingleOrDefaultAsync();
     }
 }

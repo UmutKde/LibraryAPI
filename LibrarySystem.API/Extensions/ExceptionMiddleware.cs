@@ -1,5 +1,6 @@
 using System.Net;
-using LibrarySystem.API.Models;
+using LibrarySystem.Domain.ErrorModels;
+using LibrarySystem.Domain.Exceptions;
 
 namespace LibrarySystem.API.Extensions;
 
@@ -31,7 +32,12 @@ public class ExceptionMiddleware
     private async Task HandleExceptionAsync(HttpContext context,Exception exception)
     {
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.StatusCode = exception switch
+        {
+            NotFoundException => StatusCodes.Status404NotFound,
+            BadRequestException => StatusCodes.Status400BadRequest,
+            _ => StatusCodes.Status500InternalServerError
+        };
 
         var errorResponse = new ErrorDetails()
         {

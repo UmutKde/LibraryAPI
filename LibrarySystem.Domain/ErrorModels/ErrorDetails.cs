@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace LibrarySystem.API.Models;
+namespace LibrarySystem.Domain.ErrorModels;
 
 public class ErrorDetails
 {

@@ -14,5 +14,6 @@ public static class ServiceExtensions
 
         // Service Kaydı
         services.AddScoped<IBookService,BookService>();
+        services.AddScoped<ICategoryService,CategoryService>();
     }
 }

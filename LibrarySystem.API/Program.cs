@@ -1,7 +1,9 @@
+using FluentValidation.AspNetCore;
 using LibrarySystem.API.Extensions;
 using LibrarySystem.Application.Extensions;
 using LibrarySystem.Infrastructure;
 using LibrarySystem.Infrastructure.Persistence;
+using LibrarySystem.Presentation;
 var builder = WebApplication.CreateBuilder(args);
 
 // Extensions DI
@@ -15,9 +17,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Controller Kullanmak için
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(AssemblyReference).Assembly);
+
+// FluentValidation
+builder.Services.AddValidationExtensions();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -25,7 +33,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 
 app.UseHttpsRedirection();

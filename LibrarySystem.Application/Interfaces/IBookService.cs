@@ -1,4 +1,4 @@
-using LibrarySystem.Application.Dtos.BookDto;
+using LibrarySystem.Application.Dtos.BookDtos;
 
 namespace LibrarySystem.Application.Interfaces;
 

@@ -19,37 +19,36 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public async Task AddAsync(T entity)
     {
         await _dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id)
+    public void Delete(T entity)
     {
-        var entity = await _dbSet.FindAsync(id);
-        if (entity != null)
-        {
-            _dbSet.Remove(entity);
-        }
-
+        _dbSet.Remove(entity);
     }
 
-    public async Task<IEnumerable<T>> FindByFiltredValueAsync(Expression<Func<T, bool>> expression)
+    public async Task<IEnumerable<T>> GetManyByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
     {
-        return await _dbSet.Where(expression).ToListAsync();
+        return trackChanges
+        ? await _context.Set<T>().Where(expression).ToListAsync()
+        : await _context.Set<T>().AsNoTracking().Where(expression).ToListAsync();
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync(bool trackChanges)
     {
-        return await _dbSet.ToListAsync();
+        return trackChanges
+        ? await _dbSet.ToListAsync()
+        : await _dbSet.AsNoTracking().ToListAsync();
     }
 
-    public async Task<T> GetByIdAsync(int id)
+    public async Task<T> GetOneByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
     {
-        return await _dbSet.FindAsync(id);
+        return trackChanges
+        ? await _dbSet.SingleOrDefaultAsync(expression)
+        : await _dbSet.AsNoTracking().SingleOrDefaultAsync(expression);
     }
 
-    public async Task UpdateAsync(T entity)
+    public void Update(T entity)
     {
         _dbSet.Update(entity);
-        await _context.SaveChangesAsync();
     }
 }

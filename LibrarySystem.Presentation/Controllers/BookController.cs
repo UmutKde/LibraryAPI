@@ -1,9 +1,9 @@
-using LibrarySystem.Application.Dtos.BookDto;
+using LibrarySystem.Application.Dtos.BookDtos;
 using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LibrarySystem.API.Controllers;
+namespace LibrarySystem.Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -25,8 +25,8 @@ public class BookController : ControllerBase
     [HttpGet("{id:int}", Name = "GetBookById")]
     public async Task<IActionResult> GetBookById([FromRoute] int id)
     {
-            var book = await _service.GetBookByIdAsync(id);
-            return Ok(book);
+        var book = await _service.GetBookByIdAsync(id);
+        return Ok(book);
     }
 
     [HttpPost]
@@ -45,15 +45,15 @@ public class BookController : ControllerBase
         if (!ModelState.IsValid)
             return UnprocessableEntity(ModelState);
 
-            await _service.UpdateBookAsync(bookDto);
-            return NoContent();
+        await _service.UpdateBookAsync(bookDto);
+        return NoContent();
 
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBook([FromRoute] int id)
     {
-            await _service.DeleteBookAsync(id);
-            return NoContent();
+        await _service.DeleteBookAsync(id);
+        return NoContent();
     }
 }

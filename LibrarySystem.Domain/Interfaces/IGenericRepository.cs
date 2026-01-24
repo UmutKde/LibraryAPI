@@ -8,12 +8,12 @@ namespace LibrarySystem.Domain.Interfaces;
 //bu sayede buraya int string tarzı veriler giremiyor
 public interface IGenericRepository<T> where T : class
 {
-    Task<IEnumerable<T>> GetAllAsync();     // hepsini listelemek için
-    Task<T> GetByIdAsync(int id);          // id' ye göre veri getirmek için
-    Task<IEnumerable<T>> FindByFiltredValueAsync(Expression<Func<T,bool>> expression); // filtremize göre veri getirmek için
+    Task<IEnumerable<T>> GetAllAsync(bool trackChanges);     // hepsini listelemek için
+    Task<T> GetOneByConditionAsync(Expression<Func<T,bool>> expression,bool trackChanges);     // filtreye göre tek bir veri getirmek için
+    Task<IEnumerable<T>> GetManyByConditionAsync (Expression<Func<T,bool>> expression, bool trackChanges); // filtremize göre veri getirmek için
     
     // Ekleme Silme Güncelleme
     Task AddAsync(T entity);
-    Task UpdateAsync(T entity);
-    Task DeleteAsync(int id);
+    void Update(T entity);
+    void Delete(T entity);
 }

@@ -4,8 +4,8 @@ namespace LibrarySystem.Domain.Interfaces;
 
 public interface IBookRepository : IGenericRepository<Book>
 {
-    Task<IEnumerable<Book>> GetAllBooksWithDetailsAsync();
+    Task<IEnumerable<Book>> GetAllBooksWithDetailsAsync(bool trackChanges);
 
-    Task<Book> GetOneBookWithDetailsAsync(int id);    
+    Task<Book> GetOneBookWithDetailsAsync(int id,bool trackChanges);    
 
 } 
