@@ -2,6 +2,7 @@ using AutoMapper;
 using LibrarySystem.Application.Dtos;
 using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Domain.Entities;
+using LibrarySystem.Domain.Exceptions;
 using LibrarySystem.Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -20,6 +21,12 @@ public class PublisherService : IPublisherService
 
     public async Task<PublisherDto> CreatePublisherAsync(PublisherDtoForInsertion publisherDtoForInsertion)
     {
+        var existingPublisher = await _unitOfWork.Publishers
+        .GetOneByConditionAsync(p => p.PublisherName.ToLower() == publisherDtoForInsertion.PublisherName.ToLower(), false);
+
+    if (existingPublisher is not null)
+        throw new PublisherAlreadyExistsException(publisherDtoForInsertion.PublisherName);
+
         var publisher = _mapper.Map<Publisher>(publisherDtoForInsertion);
         
         await _unitOfWork.Publishers.AddAsync(publisher);

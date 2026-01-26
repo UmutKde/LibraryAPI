@@ -3,6 +3,7 @@ using System;
 using LibrarySystem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibrarySystem.Infrastructure.Migrations
 {
     [DbContext(typeof(LibraryDbContext))]
-    partial class LibraryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260125011009_AddUniqueConstraintsToAllEntities")]
+    partial class AddUniqueConstraintsToAllEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,25 +136,11 @@ namespace LibrarySystem.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Barcode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("BookId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Condition")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsAvailable")
+                    b.Property<bool>("isAvailable")
                         .HasColumnType("boolean");
-
-                    b.Property<decimal?>("ReplacementCost")
-                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -212,10 +201,13 @@ namespace LibrarySystem.Infrastructure.Migrations
                     b.Property<int>("BookCopyId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("DueDate")
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("BorrowedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("LoanDate")
+                    b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ReturnDate")

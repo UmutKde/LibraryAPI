@@ -28,6 +28,7 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
             .Include(b => b.Publisher)
             .Include(b => b.Authors)
             .Include(b => b.Categories)
+            .Include(b => b.Summary)
             .Where(b => b.Id == id);
         return trackChanges
         ? await query.SingleOrDefaultAsync()

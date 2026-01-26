@@ -20,8 +20,13 @@ public class CategoryService : ICategoryService
 
     public async Task<CategoryDto> CreateCategoryAsync(CategoryDtoForInsertion categoryDtoForInsertion)
     {
+        var existingCategory = await _unitOfWork.Categories
+        .GetOneByConditionAsync(c => c.CategoryName.ToLower() == categoryDtoForInsertion.CategoryName.ToLower(), false);
+
+        if (existingCategory is not null)
+            throw new CategoryAlreadyExistsException(categoryDtoForInsertion.CategoryName);
         var category = _mapper.Map<Category>(categoryDtoForInsertion);
-        
+
         await _unitOfWork.Categories.AddAsync(category);
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<CategoryDto>(category);
@@ -29,8 +34,8 @@ public class CategoryService : ICategoryService
 
     public async Task DeleteCategoryAsync(int id)
     {
-        var category = await _unitOfWork.Categories.GetOneByConditionAsync(b => b.Id == id,true);
-        if(category == null)
+        var category = await _unitOfWork.Categories.GetOneByConditionAsync(b => b.Id == id, true);
+        if (category == null)
             throw new CategoryNotFoundException(id);
         _unitOfWork.Categories.Delete(category);
         await _unitOfWork.SaveChangesAsync();
@@ -44,8 +49,8 @@ public class CategoryService : ICategoryService
 
     public async Task<CategoryDto> GetOneCategoryAsync(int id)
     {
-        var category = await _unitOfWork.Categories.GetOneByConditionAsync(b => b.Id == id,false);
-        if(category is null)
+        var category = await _unitOfWork.Categories.GetOneByConditionAsync(b => b.Id == id, false);
+        if (category is null)
             throw new CategoryNotFoundException(id);
         return _mapper.Map<CategoryDto>(category);
     }
@@ -53,11 +58,11 @@ public class CategoryService : ICategoryService
     public async Task UpdateCategoryAsync(CategoryDtoForUpdate categoryDtoForUpdate)
     {
         // Id == categoryDtoForUpdate.Id kısmı kontrol edilecek
-        var category = await _unitOfWork.Categories.GetOneByConditionAsync(b => b.Id == categoryDtoForUpdate.Id,true);
-        if(category is null)
+        var category = await _unitOfWork.Categories.GetOneByConditionAsync(b => b.Id == categoryDtoForUpdate.Id, true);
+        if (category is null)
             throw new CategoryNotFoundException(categoryDtoForUpdate.Id);
-        _mapper.Map(categoryDtoForUpdate,category);
-        
+        _mapper.Map(categoryDtoForUpdate, category);
+
         _unitOfWork.Categories.Update(category);
         await _unitOfWork.SaveChangesAsync();
     }

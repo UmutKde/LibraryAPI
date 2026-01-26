@@ -18,14 +18,18 @@ public class CreateBookDtoValidator : AbstractValidator<BookDtoForInsertion>
         RuleFor(x => x.PageCount)
             .NotEmpty().WithMessage("Page count is required.")
             .GreaterThan(0).WithMessage("Page count must be greater than 0.");
-        
+
         RuleFor(x => x.AuthorIds)
             .NotEmpty().WithMessage("At least one author is required.");
-        
+
         RuleFor(x => x.CategoryIds)
             .NotEmpty().WithMessage("At least one category is required.");
-        
+
         RuleFor(x => x.PublisherId)
             .NotEmpty().WithMessage("At least one publisher is required.");
+
+        RuleFor(x => x.Summary)
+            .MaximumLength(5000).WithMessage("Summary is too long.")
+            .When(x => !string.IsNullOrEmpty(x.Summary));
     }
 }

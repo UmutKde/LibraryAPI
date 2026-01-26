@@ -20,6 +20,13 @@ public class BookService : IBookService
 
     public async Task<BookDto> CreateBookAsync(BookDtoForInsertion bookDtoForInsertion)
     {
+        var existingBook = await _unitOfWork.Books
+        .GetOneByConditionAsync(b => b.ISBN == bookDtoForInsertion.ISBN, false);
+
+        if (existingBook is not null)
+        {
+            throw new BookAlreadyExistsException(bookDtoForInsertion.ISBN);
+        }
         var book = _mapper.Map<Book>(bookDtoForInsertion);
 
         if (bookDtoForInsertion.AuthorIds != null)
@@ -60,7 +67,6 @@ public class BookService : IBookService
 
     public async Task DeleteBookAsync(int id)
     {
-        Console.WriteLine($" >>> GELEN ID: {id} <<<");
         var book = await _unitOfWork.Books.GetOneByConditionAsync(b => b.Id == id, true);
         if (book == null)
             throw new BookNotFoundException(id);
@@ -122,8 +128,11 @@ public class BookService : IBookService
                 book.Publisher = publisher;
             else
                 throw new PublisherNotFoundException(bookDtoForUpdate.PublisherId);
-
         }
+        if (book.Summary != null)
+            book.Summary.Summary = bookDtoForUpdate.Summary;
+        else if (!string.IsNullOrEmpty(bookDtoForUpdate.Summary))
+            book.Summary = new BookSummary { Summary = bookDtoForUpdate.Summary };
 
         _unitOfWork.Books.Update(book);
         await _unitOfWork.SaveChangesAsync();

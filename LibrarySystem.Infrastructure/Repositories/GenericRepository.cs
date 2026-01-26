@@ -26,12 +26,26 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _dbSet.Remove(entity);
     }
 
-    public async Task<IEnumerable<T>> GetManyByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
+   public async Task<IEnumerable<T>> GetManyByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges,
+    params Expression<Func<T, object>>[] includes)
+{
+    IQueryable<T> query = _dbSet.Where(expression);
+
+    if (!trackChanges)
     {
-        return trackChanges
-        ? await _context.Set<T>().Where(expression).ToListAsync()
-        : await _context.Set<T>().AsNoTracking().Where(expression).ToListAsync();
+        query = query.AsNoTracking();
     }
+
+    if (includes != null)
+    {
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+    }
+
+    return await query.ToListAsync();
+}
 
     public async Task<IEnumerable<T>> GetAllAsync(bool trackChanges)
     {

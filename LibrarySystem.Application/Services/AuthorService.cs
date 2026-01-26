@@ -21,6 +21,13 @@ public class AuthorService : IAuthorService
 
     public async Task<AuthorDto> CreateAuthorAsync(AuthorDtoForInsertion authorDtoForInsertion)
     {
+        var existingAuthor = await _unitOfWork.Authors
+        .GetOneByConditionAsync(a =>
+            a.Name.ToLower() == authorDtoForInsertion.Name.ToLower() &&
+            a.Surname.ToLower() == authorDtoForInsertion.Surname.ToLower(), false);
+
+        if (existingAuthor is not null)
+            throw new AuthorAlreadyExistsException((authorDtoForInsertion.Name)+(authorDtoForInsertion.Surname));
         var author = _mapper.Map<Author>(authorDtoForInsertion);
 
         await _unitOfWork.Authors.AddAsync(author);
@@ -30,8 +37,8 @@ public class AuthorService : IAuthorService
 
     public async Task DeleteAuthorAsync(int id)
     {
-        var author = await _unitOfWork.Authors.GetOneByConditionAsync(b => b.Id == id,true);
-        if(author == null)
+        var author = await _unitOfWork.Authors.GetOneByConditionAsync(b => b.Id == id, true);
+        if (author == null)
             throw new AuthorNotFoundException(id);
         _unitOfWork.Authors.Delete(author);
         await _unitOfWork.SaveChangesAsync();
@@ -45,18 +52,18 @@ public class AuthorService : IAuthorService
 
     public async Task<AuthorDto> GetAuthorByIdAsync(int id)
     {
-        var author = await _unitOfWork.Authors.GetOneByConditionAsync(b => b.Id==id,false);
-        if(author is null)
+        var author = await _unitOfWork.Authors.GetOneByConditionAsync(b => b.Id == id, false);
+        if (author is null)
             throw new AuthorNotFoundException(id);
         return _mapper.Map<AuthorDto>(author);
     }
 
     public async Task UpdateAuthorAsync(AuthorDtoForUpdate authorDtoForUpdate)
     {
-        var author = await _unitOfWork.Authors.GetOneByConditionAsync(b => b.Id == authorDtoForUpdate.Id,true);
-        if(author is null)
+        var author = await _unitOfWork.Authors.GetOneByConditionAsync(b => b.Id == authorDtoForUpdate.Id, true);
+        if (author is null)
             throw new AuthorNotFoundException(authorDtoForUpdate.Id);
-        _mapper.Map(authorDtoForUpdate,author);
+        _mapper.Map(authorDtoForUpdate, author);
 
         _unitOfWork.Authors.Update(author);
         await _unitOfWork.SaveChangesAsync();

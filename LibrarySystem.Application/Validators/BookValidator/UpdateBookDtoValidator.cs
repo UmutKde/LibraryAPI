@@ -27,5 +27,9 @@ public class UpdateBookDtoValidator : AbstractValidator<BookDtoForUpdate>
         
         RuleFor(x => x.PublisherId)
             .NotEmpty().WithMessage("At least one publisher is required.");
+            
+        RuleFor(x => x.Summary)
+            .MaximumLength(5000).WithMessage("Summary is too long.")
+            .When(x => !string.IsNullOrEmpty(x.Summary));
     }
 }

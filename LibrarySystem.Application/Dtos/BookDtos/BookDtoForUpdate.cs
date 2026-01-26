@@ -12,4 +12,6 @@ public class BookDtoForUpdate
     public int PublisherId { get; set; }
     public List<int> AuthorIds { get; set; }
     public List<int> CategoryIds { get; set; }
+    public string Summary { get; set; }
+
 }

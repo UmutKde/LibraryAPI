@@ -9,6 +9,7 @@ public interface IUnitOfWork : IDisposable
     IGenericRepository<Author> Authors {get;}
     IGenericRepository<Publisher> Publishers {get;}
     IGenericRepository<Category> Categories {get;}
+    IGenericRepository<BookCopy> BookCopies {get;}
 
     Task<int> SaveChangesAsync();
 }
