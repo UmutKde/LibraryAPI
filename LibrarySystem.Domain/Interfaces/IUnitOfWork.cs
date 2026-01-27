@@ -10,6 +10,8 @@ public interface IUnitOfWork : IDisposable
     IGenericRepository<Publisher> Publishers {get;}
     IGenericRepository<Category> Categories {get;}
     IGenericRepository<BookCopy> BookCopies {get;}
+    IGenericRepository<Loan> Loans {get;}
+    IGenericRepository<User> Users {get;}
 
     Task<int> SaveChangesAsync();
 }

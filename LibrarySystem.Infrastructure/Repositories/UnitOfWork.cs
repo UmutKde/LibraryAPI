@@ -16,6 +16,9 @@ public class UnitOfWork : IUnitOfWork
     public IGenericRepository<Category> Categories {get; private set;}
     public IGenericRepository<BookCopy> BookCopies {get; private set;}
 
+    public IGenericRepository<Loan> Loans {get; private set;}
+
+    public IGenericRepository<User> Users {get; private set;}
     public UnitOfWork(LibraryDbContext context)
     {
         _context = context;
@@ -24,6 +27,10 @@ public class UnitOfWork : IUnitOfWork
         Publishers = new GenericRepository<Publisher>(_context);
         Categories = new GenericRepository<Category>(_context);
         BookCopies = new GenericRepository<BookCopy>(_context);
+        Loans = new GenericRepository<Loan>(_context);
+        Users = new GenericRepository<User>(_context);
+
+        
     }
 
 

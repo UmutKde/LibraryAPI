@@ -2,10 +2,11 @@ using LibrarySystem.Domain.Constants;
 
 namespace LibrarySystem.Application.Dtos;
 
-public class BookCopyDtoForUpdate
+public class LoanDtoForUpdate
 {
     public int Id { get; set; }
+    public string Barcode { get; set; }
+    public int UserId { get; set; }
     public BookCondition Condition { get; set; }
-    public bool IsAvailable { get; set; }
-    public decimal? ReplacementCost { get; set; }
+
 }

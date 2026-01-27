@@ -21,7 +21,11 @@ namespace LibrarySystem.Infrastructure.Migrations
                     Name = table.Column<string>(type: "text", nullable: true),
                     Surname = table.Column<string>(type: "text", nullable: true),
                     ImageUrl = table.Column<string>(type: "text", nullable: true),
-                    Summary = table.Column<string>(type: "text", nullable: true)
+                    Summary = table.Column<string>(type: "text", nullable: true),
+                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DeathDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Country = table.Column<string>(type: "text", nullable: true),
+                    WebSiteUrl = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -48,7 +52,13 @@ namespace LibrarySystem.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     PublisherName = table.Column<string>(type: "text", nullable: true),
-                    ImageUrl = table.Column<string>(type: "text", nullable: true)
+                    ImageUrl = table.Column<string>(type: "text", nullable: true),
+                    ContactEmail = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    WebsiteUrl = table.Column<string>(type: "text", nullable: true),
+                    ContactPerson = table.Column<string>(type: "text", nullable: true),
+                    City = table.Column<string>(type: "text", nullable: true),
+                    Country = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -149,8 +159,12 @@ namespace LibrarySystem.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BookId = table.Column<int>(type: "integer", nullable: false),
-                    isAvailable = table.Column<bool>(type: "boolean", nullable: false)
+                    Barcode = table.Column<string>(type: "text", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "boolean", nullable: false),
+                    Condition = table.Column<int>(type: "integer", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ReplacementCost = table.Column<decimal>(type: "numeric", nullable: true),
+                    BookId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,12 +203,11 @@ namespace LibrarySystem.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    BookCopyId = table.Column<int>(type: "integer", nullable: false),
-                    BorrowedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LoanDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ReturnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    BookId = table.Column<int>(type: "integer", nullable: false)
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    BookCopyId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -219,6 +232,12 @@ namespace LibrarySystem.Infrastructure.Migrations
                 column: "BooksId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Authors_Name_Surname",
+                table: "Authors",
+                columns: new[] { "Name", "Surname" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BookCategory_CategoriesId",
                 table: "BookCategory",
                 column: "CategoriesId");
@@ -227,6 +246,12 @@ namespace LibrarySystem.Infrastructure.Migrations
                 name: "IX_BookCopies_BookId",
                 table: "BookCopies",
                 column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Books_ISBN",
+                table: "Books",
+                column: "ISBN",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_PublisherId",
@@ -240,6 +265,12 @@ namespace LibrarySystem.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Categories_CategoryName",
+                table: "Categories",
+                column: "CategoryName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Loans_BookCopyId",
                 table: "Loans",
                 column: "BookCopyId");
@@ -248,6 +279,12 @@ namespace LibrarySystem.Infrastructure.Migrations
                 name: "IX_Loans_UserId",
                 table: "Loans",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Publishers_PublisherName",
+                table: "Publishers",
+                column: "PublisherName",
+                unique: true);
         }
 
         /// <inheritdoc />

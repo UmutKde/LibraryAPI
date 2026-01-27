@@ -140,9 +140,8 @@ namespace LibrarySystem.Infrastructure.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Condition")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Condition")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp with time zone");
