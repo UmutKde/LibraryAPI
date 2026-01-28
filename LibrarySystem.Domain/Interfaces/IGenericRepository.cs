@@ -9,7 +9,7 @@ namespace LibrarySystem.Domain.Interfaces;
 public interface IGenericRepository<T> where T : class
 {
     Task<IEnumerable<T>> GetAllAsync(bool trackChanges);     // hepsini listelemek için
-    Task<T> GetOneByConditionAsync(Expression<Func<T,bool>> expression,bool trackChanges);     // filtreye göre tek bir veri getirmek için
+    Task<T> GetOneByConditionAsync(Expression<Func<T,bool>> expression,bool trackChanges,params Expression<Func<T,object>>[] includes);     // filtreye göre tek bir veri getirmek için
     Task<IEnumerable<T>> GetManyByConditionAsync (Expression<Func<T,bool>> expression, bool trackChanges,params Expression<Func<T,object>>[] includes); // filtremize göre veri getirmek için
     
     // Ekleme Silme Güncelleme

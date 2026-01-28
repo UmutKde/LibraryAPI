@@ -1,3 +1,4 @@
+using AutoMapper;
 using LibrarySystem.Application.Dtos;
 using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Domain.Constants;
@@ -11,10 +12,12 @@ namespace LibrarySystem.Application.Services;
 public class LoanService : ILoanService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public LoanService(IUnitOfWork unitOfWork)
+    public LoanService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     public async Task<LoanResponseDto> CreateLoan(LoanDtoForInsertion loanDtoForInsertion)
@@ -29,7 +32,7 @@ public class LoanService : ILoanService
             throw new UserLoanLimitExceededException(activeCount.Count()); // kullacınının elinde 3 kitap var alamaz hatası dönülcek
 
         int loanDuration = 14;
-        var potentialDueDate = DateTime.Now.AddDays(loanDuration);
+        var potentialDueDate = DateTime.UtcNow.AddDays(loanDuration);
 
         if (potentialDueDate.DayOfWeek == DayOfWeek.Sunday)
             loanDuration += 1;
@@ -38,9 +41,9 @@ public class LoanService : ILoanService
         {
             UserId = loanDtoForInsertion.UserId,
             BookCopyId = bookcopy.Id,
-            LoanDate = DateTime.Now,
+            LoanDate = DateTime.UtcNow,
             ReturnDate = null,
-            DueDate = DateTime.Now.AddDays(loanDuration),
+            DueDate = DateTime.UtcNow.AddDays(loanDuration),
         };
         bookcopy.IsAvailable = false;
 
@@ -58,6 +61,50 @@ public class LoanService : ILoanService
             DueDate = loan.DueDate,
             Message = "The book has been successfully loan to the user.",
         };
+    }
+
+    public async Task<IEnumerable<LoanDto>> GetActiveLoansByUserIdAsync(int userId)
+    {
+        var activeLoans = await _unitOfWork.Loans.GetManyByConditionAsync(b => b.UserId == userId && b.ReturnDate == null,false,b=> b.User,b => b.BookCopy,b => b.BookCopy.Book);
+        
+        return _mapper.Map<IEnumerable<LoanDto>>(activeLoans);
+    }
+
+    public async Task<IEnumerable<LoanDto>> GetAllActiveLoanAsync()
+    {
+        var activeLoan = await _unitOfWork.Loans.GetManyByConditionAsync(b => b.ReturnDate == null,false,b => b.User,b => b.BookCopy);
+
+        return _mapper.Map<IEnumerable<LoanDto>>(activeLoan);
+    }
+
+    public async Task<IEnumerable<LoanDto>> GetAllLoansAsync()
+    {
+        var loans = await _unitOfWork.Loans.GetAllAsync(false);
+        return _mapper.Map<IEnumerable<LoanDto>>(loans);
+    }
+
+    public async Task<LoanDto> GetLoanByBarcode(string barcode)
+    {
+        var loan = await _unitOfWork.Loans.GetOneByConditionAsync(b => b.BookCopy.Barcode == barcode && b.ReturnDate == null,false, b=> b.User,b => b.BookCopy,b => b.BookCopy.Book);
+        if(loan is null)
+            throw new NotImplementedException();
+        return _mapper.Map<LoanDto>(loan);
+    }
+
+    public async Task<LoanDto> GetLoanByIdAsync(int id)
+    {
+        var loan = await _unitOfWork.Loans.GetOneByConditionAsync(b => b.Id == id,false,b=> b.User,b => b.BookCopy,b => b.BookCopy.Book);
+        if(loan is null)
+            throw new NotImplementedException();
+        return _mapper.Map<LoanDto>(loan);
+    }
+
+    public async Task<IEnumerable<LoanDto>> GetLoansByUserIdAsync(int userId)
+    {
+        var loans = await _unitOfWork.Loans.GetManyByConditionAsync(b => b.UserId == userId,false,b=> b.User,b => b.BookCopy,b => b.BookCopy.Book);
+        if(loans is null)
+            throw new NotImplementedException();
+        return _mapper.Map<IEnumerable<LoanDto>>(loans);
     }
 
     public async Task<(decimal totalCost, string message)> UpdateLoan(LoanDtoForUpdate loanDtoForUpdate)
@@ -79,9 +126,9 @@ public class LoanService : ILoanService
             costDetails.Add($"Damage Cost: {bookPrice} TL ");
         }
 
-        if (DateTime.Now > activeLoan.DueDate)
+        if (DateTime.UtcNow > activeLoan.DueDate)
         {
-            var lateDays = (int)(DateTime.Now - activeLoan.DueDate).TotalDays;
+            var lateDays = (int)(DateTime.UtcNow - activeLoan.DueDate).TotalDays;
             var dailyPenalty = bookPrice * 0.05m;
             var totalLateFee = dailyPenalty * lateDays;
 
@@ -89,7 +136,7 @@ public class LoanService : ILoanService
             costDetails.Add($"Late Fee ({lateDays} Day): {totalLateFee} TL");
         }
 
-        activeLoan.ReturnDate = DateTime.Now;
+        activeLoan.ReturnDate = DateTime.UtcNow;
         bookcopy.Condition = loanDtoForUpdate.Condition;
 
         if ((int)loanDtoForUpdate.Condition >= 4)

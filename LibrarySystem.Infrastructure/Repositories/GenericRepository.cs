@@ -54,7 +54,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         : await _dbSet.AsNoTracking().ToListAsync();
     }
 
-    public async Task<T> GetOneByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
+    public async Task<T> GetOneByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges,params Expression<Func<T,object>>[] includes)
     {
         return trackChanges
         ? await _dbSet.SingleOrDefaultAsync(expression)

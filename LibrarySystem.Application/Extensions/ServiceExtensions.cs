@@ -18,5 +18,6 @@ public static class ServiceExtensions
         services.AddScoped<IAuthorService,AuthorService>();
         services.AddScoped<IPublisherService,PublisherService>();
         services.AddScoped<IBookCopyService,BookCopyService>();
+        services.AddScoped<ILoanService,LoanService>();
     }
 }

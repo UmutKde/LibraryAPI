@@ -41,10 +41,14 @@ public class GeneralMapping : Profile
         CreateMap<PublisherDtoForInsertion, Publisher>();
         CreateMap<PublisherDtoForUpdate, Publisher>();
 
-
-
         CreateMap<BookCopy, BookCopyDto>()
             .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.BookName));
         CreateMap<BookCopyDtoForUpdate, BookCopy>().ReverseMap();
+    
+        CreateMap<Loan, LoanDto>()
+    // İlişkili tablolardan veri çekme (Navigation Properties)
+    .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => $"{src.User.Name} {src.User.Surname}"))
+    .ForMember(dest => dest.BookName, opt => opt.MapFrom(src => src.BookCopy.Book.BookName))
+    .ForMember(dest => dest.Barcode, opt => opt.MapFrom(src => src.BookCopy.Barcode));
     }
 }
