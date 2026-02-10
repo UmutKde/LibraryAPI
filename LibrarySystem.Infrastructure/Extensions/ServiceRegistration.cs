@@ -1,9 +1,11 @@
+using LibrarySystem.Domain.Entities;
 using LibrarySystem.Domain.Interfaces;
 using LibrarySystem.Infrastructure.Persistence;
 using LibrarySystem.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
 
 namespace LibrarySystem.Infrastructure;
 
@@ -20,5 +22,14 @@ public static class ServiceRegistration
 
         // Unit Of Work Kaydı
         services.AddScoped<IUnitOfWork,UnitOfWork>();
+
+        services.AddIdentity<User, IdentityRole<int>>(opt => 
+        {
+            opt.Password.RequireDigit = true;
+            opt.Password.RequiredLength = 8;
+            opt.User.RequireUniqueEmail = true;
+        })
+        .AddEntityFrameworkStores<LibraryDbContext>()
+        .AddDefaultTokenProviders();
     }
 }

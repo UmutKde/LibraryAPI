@@ -44,11 +44,20 @@ public class GeneralMapping : Profile
         CreateMap<BookCopy, BookCopyDto>()
             .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.BookName));
         CreateMap<BookCopyDtoForUpdate, BookCopy>().ReverseMap();
-    
+
         CreateMap<Loan, LoanDto>()
-    // İlişkili tablolardan veri çekme (Navigation Properties)
-    .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => $"{src.User.Name} {src.User.Surname}"))
-    .ForMember(dest => dest.BookName, opt => opt.MapFrom(src => src.BookCopy.Book.BookName))
-    .ForMember(dest => dest.Barcode, opt => opt.MapFrom(src => src.BookCopy.Barcode));
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => $"{src.User.Name} {src.User.Surname}"))
+            .ForMember(dest => dest.BookName, opt => opt.MapFrom(src => src.BookCopy.Book.BookName))
+            .ForMember(dest => dest.Barcode, opt => opt.MapFrom(src => src.BookCopy.Barcode));
+
+        CreateMap<UserRegistrationDto,User>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Surname))
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
     }
 }

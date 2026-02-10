@@ -1,9 +1,10 @@
-using FluentValidation.AspNetCore;
 using LibrarySystem.API.Extensions;
 using LibrarySystem.Application.Extensions;
+using LibrarySystem.Domain.Entities;
 using LibrarySystem.Infrastructure;
 using LibrarySystem.Infrastructure.Persistence;
 using LibrarySystem.Presentation;
+using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 // Extensions DI
@@ -33,6 +34,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHttpsRedirection();

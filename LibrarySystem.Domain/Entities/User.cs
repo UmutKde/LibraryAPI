@@ -1,13 +1,16 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace LibrarySystem.Domain.Entities;
 
-public class User
+public class User : IdentityUser<int>
 {
-    public int Id { get; set; }
+    public Guid UserGuid { get; set; } = Guid.NewGuid();
     public string? Name { get; set; }
-    public string? Surname { get; set; } 
-    public string? Email { get; set; }
-    public DateTime BirthDate { get; set; }
+    public string? Surname { get; set; }
+    public DateOnly BirthDate { get; set; }
     public bool Gender { get; set; }
+    public string? RefreshToken { get; set; }
+    public DateTime RefrestTokenExpiryTime { get; set; }
 
     // Relation Tables
     public ICollection<Loan> Loans { get; set; }
