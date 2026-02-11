@@ -15,7 +15,10 @@ builder.Services.AddApplicationService();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwagger();
+
+// Jwt
+builder.Services.ConfigureJWT(builder.Configuration);
 
 // Controller Kullanmak için
 builder.Services.AddControllers()

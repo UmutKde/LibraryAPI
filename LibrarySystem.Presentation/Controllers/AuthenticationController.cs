@@ -1,5 +1,6 @@
 using LibrarySystem.Application.Dtos;
 using LibrarySystem.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Presentation.Controllers;
@@ -33,5 +34,28 @@ private readonly IAuthenticationService _service;
             ModelState.TryAddModelError(error.Code, error.Description);
         }
         return BadRequest(ModelState);
+    }
+
+    [HttpPost]
+    [Route("login")]
+    public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
+    {
+        try
+        {
+            var token = await _service.Login(userLoginDto);
+            return Ok(new {Token = token});
+        }
+        catch (Exception)
+        {
+            return Unauthorized();
+        }
+    }
+
+    [Authorize]
+    [HttpGet("test-token")]
+    public IActionResult TestToken()
+    {
+        // Eğer buraya kadar gelebildiyse, Token geçerli demektir.
+        return Ok("Tebrikler! 🔓 Kapı açıldı, Token geçerli. İçeridesin!");
     }
 }
