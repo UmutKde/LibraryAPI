@@ -1,6 +1,9 @@
 using LibrarySystem.Application.Dtos.BookDtos;
+using LibrarySystem.Application.Enums;
 using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Domain.Entities;
+using LibrarySystem.Presentation.HasPermissionAttribute;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Presentation.Controllers;
@@ -30,6 +33,7 @@ public class BookController : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission<Book>(ActionType.Create)]
     public async Task<IActionResult> CreateBook([FromBody] BookDtoForInsertion bookDto)
     {
         if (!ModelState.IsValid)
@@ -40,6 +44,7 @@ public class BookController : ControllerBase
     }
 
     [HttpPut]
+    [HasPermission<Book>(ActionType.Update)]
     public async Task<IActionResult> UpdateBook([FromBody] BookDtoForUpdate bookDto)
     {
         if (!ModelState.IsValid)
@@ -51,6 +56,7 @@ public class BookController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [HasPermission<Book>(ActionType.Delete)]
     public async Task<IActionResult> DeleteBook([FromRoute] int id)
     {
         await _service.DeleteBookAsync(id);

@@ -50,6 +50,12 @@ public class GeneralMapping : Profile
             .ForMember(dest => dest.BookName, opt => opt.MapFrom(src => src.BookCopy.Book.BookName))
             .ForMember(dest => dest.Barcode, opt => opt.MapFrom(src => src.BookCopy.Barcode));
 
+        CreateMap<Loan,LoanDtoForGet>()
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => $"{src.User.Name} {src.User.Surname}"))
+            .ForMember(dest => dest.BookName, opt => opt.MapFrom(src => src.BookCopy.Book.BookName))
+            .ForMember(dest => dest.Barcode, opt => opt.MapFrom(src => src.BookCopy.Barcode))
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id)).ReverseMap();
+
         CreateMap<UserRegistrationDto,User>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Surname))

@@ -1,5 +1,8 @@
 using LibrarySystem.Application.Dtos.CategoryDtos;
+using LibrarySystem.Application.Enums;
 using LibrarySystem.Application.Interfaces;
+using LibrarySystem.Domain.Entities;
+using LibrarySystem.Presentation.HasPermissionAttribute;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Presentation.Controllers;
@@ -30,6 +33,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission<Category>(ActionType.Create)]
     public async Task<IActionResult> CreateCategory([FromBody] CategoryDtoForInsertion categoryDtoForInsertion)
     {
         var createdCategory = await _service.CreateCategoryAsync(categoryDtoForInsertion);
@@ -37,6 +41,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut]
+    [HasPermission<Category>(ActionType.Update)]
     public async Task<IActionResult> UpdateCategory([FromBody] CategoryDtoForUpdate categoryDtoForUpdate)
     {
         await _service.UpdateCategoryAsync(categoryDtoForUpdate);
@@ -44,6 +49,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [HasPermission<Category>(ActionType.Delete)]
     public async Task<IActionResult> DeleteCategory([FromRoute] int id)
     {
         await _service.DeleteCategoryAsync(id);

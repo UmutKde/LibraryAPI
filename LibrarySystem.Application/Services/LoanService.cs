@@ -5,7 +5,6 @@ using LibrarySystem.Domain.Constants;
 using LibrarySystem.Domain.Entities;
 using LibrarySystem.Domain.Exceptions;
 using LibrarySystem.Domain.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace LibrarySystem.Application.Services;
 
@@ -65,14 +64,14 @@ public class LoanService : ILoanService
 
     public async Task<IEnumerable<LoanDto>> GetActiveLoansByUserIdAsync(int userId)
     {
-        var activeLoans = await _unitOfWork.Loans.GetManyByConditionAsync(b => b.UserId == userId && b.ReturnDate == null,false,b=> b.User,b => b.BookCopy,b => b.BookCopy.Book);
-        
+        var activeLoans = await _unitOfWork.Loans.GetManyByConditionAsync(b => b.UserId == userId && b.ReturnDate == null, false, b => b.User, b => b.BookCopy, b => b.BookCopy.Book);
+
         return _mapper.Map<IEnumerable<LoanDto>>(activeLoans);
     }
 
     public async Task<IEnumerable<LoanDto>> GetAllActiveLoanAsync()
     {
-        var activeLoan = await _unitOfWork.Loans.GetManyByConditionAsync(b => b.ReturnDate == null,false,b => b.User,b => b.BookCopy);
+        var activeLoan = await _unitOfWork.Loans.GetManyByConditionAsync(b => b.ReturnDate == null, false, b => b.User, b => b.BookCopy);
 
         return _mapper.Map<IEnumerable<LoanDto>>(activeLoan);
     }
@@ -85,24 +84,24 @@ public class LoanService : ILoanService
 
     public async Task<LoanDto> GetLoanByBarcode(string barcode)
     {
-        var loan = await _unitOfWork.Loans.GetOneByConditionAsync(b => b.BookCopy.Barcode == barcode && b.ReturnDate == null,false, b=> b.User,b => b.BookCopy,b => b.BookCopy.Book);
-        if(loan is null)
+        var loan = await _unitOfWork.Loans.GetOneByConditionAsync(b => b.BookCopy.Barcode == barcode && b.ReturnDate == null, false, b => b.User, b => b.BookCopy, b => b.BookCopy.Book);
+        if (loan is null)
             throw new NotImplementedException();
         return _mapper.Map<LoanDto>(loan);
     }
 
-    public async Task<LoanDto> GetLoanByIdAsync(int id)
+    public async Task<LoanDtoForGet> GetLoanByIdAsync(int id)
     {
-        var loan = await _unitOfWork.Loans.GetOneByConditionAsync(b => b.Id == id,false,b=> b.User,b => b.BookCopy,b => b.BookCopy.Book);
-        if(loan is null)
+        var loan = await _unitOfWork.Loans.GetOneByConditionAsync(b => b.Id == id, false, b => b.User, b => b.BookCopy, b => b.BookCopy.Book);
+        if (loan is null)
             throw new NotImplementedException();
-        return _mapper.Map<LoanDto>(loan);
+        return _mapper.Map<LoanDtoForGet>(loan);
     }
 
     public async Task<IEnumerable<LoanDto>> GetLoansByUserIdAsync(int userId)
     {
-        var loans = await _unitOfWork.Loans.GetManyByConditionAsync(b => b.UserId == userId,false,b=> b.User,b => b.BookCopy,b => b.BookCopy.Book);
-        if(loans is null)
+        var loans = await _unitOfWork.Loans.GetManyByConditionAsync(b => b.UserId == userId, false, b => b.User, b => b.BookCopy, b => b.BookCopy.Book);
+        if (loans is null)
             throw new NotImplementedException();
         return _mapper.Map<IEnumerable<LoanDto>>(loans);
     }
@@ -146,12 +145,12 @@ public class LoanService : ILoanService
 
         await _unitOfWork.SaveChangesAsync();
 
-        string resultMessage = totalCost > 0 
-        ? string.Join(", ", costDetails) 
+        string resultMessage = totalCost > 0
+        ? string.Join(", ", costDetails)
         : "Refund successfully received, no outstanding debt.";
 
 
-        return(totalCost,resultMessage);
+        return (totalCost, resultMessage);
 
     }
 }

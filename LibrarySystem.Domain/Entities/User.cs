@@ -10,7 +10,7 @@ public class User : IdentityUser<int>
     public DateOnly BirthDate { get; set; }
     public bool Gender { get; set; }
     public string? RefreshToken { get; set; }
-    public DateTime RefrestTokenExpiryTime { get; set; }
+    public DateTime? RefreshTokenExpiryTime { get; set; }
 
     // Relation Tables
     public ICollection<Loan> Loans { get; set; }

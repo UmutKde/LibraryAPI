@@ -1,5 +1,8 @@
 using System.Text;
+using LibrarySystem.API.Security;
+using LibrarySystem.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -7,7 +10,7 @@ namespace LibrarySystem.API.Extensions;
 
 public static class ServiceExtension
 {
-    public static void ConfigureJWT(this IServiceCollection services,IConfiguration configuration)
+    public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection("JwtSettings"); // appsetting' de olan jwt ile aynı isimde
         var secretKey = jwtSettings["secretKey"];
@@ -64,5 +67,11 @@ public static class ServiceExtension
                 }
             });
         });
+    }
+
+    public static void ConfigureAuthorization(this IServiceCollection services)
+    {
+        services.AddSingleton<IAuthorizationPolicyProvider,DynamicPermissionPolicyProvider>();
+        services.AddSingleton<IAuthorizationHandler,PermissionHandler>();
     }
 }

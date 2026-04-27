@@ -20,6 +20,9 @@ builder.Services.ConfigureSwagger();
 // Jwt
 builder.Services.ConfigureJWT(builder.Configuration);
 
+// Policy
+builder.Services.ConfigureAuthorization();
+
 // Controller Kullanmak için
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(AssemblyReference).Assembly);

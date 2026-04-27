@@ -11,7 +11,7 @@ public interface ILoanService
     Task<IEnumerable<LoanDto>> GetAllLoansAsync();
     Task<IEnumerable<LoanDto>> GetLoansByUserIdAsync(int userId);
     Task<IEnumerable<LoanDto>> GetActiveLoansByUserIdAsync(int userId);
-    Task<LoanDto> GetLoanByIdAsync(int id);
+    Task<LoanDtoForGet> GetLoanByIdAsync(int id);
     Task<LoanDto> GetLoanByBarcode(string barcode);
 
 }

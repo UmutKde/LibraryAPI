@@ -1,5 +1,8 @@
 using LibrarySystem.Application.Dtos;
+using LibrarySystem.Application.Enums;
 using LibrarySystem.Application.Interfaces;
+using LibrarySystem.Domain.Entities;
+using LibrarySystem.Presentation.HasPermissionAttribute;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Presentation.Controllers;
@@ -23,6 +26,7 @@ public class BookCopyController : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission<BookCopy>(ActionType.Create)]
     public async Task<IActionResult> CreateCopies([FromBody] BookCopyDtoForInsertion bookCopyDtoForInsertion)
     {
         var barcodes = await _service.CreateCopiesAsync(bookCopyDtoForInsertion);
@@ -30,6 +34,7 @@ public class BookCopyController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [HasPermission<BookCopy>(ActionType.Delete)]
     public async Task<IActionResult> DeleteCopy(int id)
     {
         await _service.DeleteCopyAsync(id);
@@ -37,6 +42,7 @@ public class BookCopyController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [HasPermission<BookCopy>(ActionType.Update)]
     public async Task<IActionResult> UpdateCopy(int id,[FromBody] BookCopyDtoForUpdate bookCopyDtoForUpdate)
     {
         if (id != bookCopyDtoForUpdate.Id)
